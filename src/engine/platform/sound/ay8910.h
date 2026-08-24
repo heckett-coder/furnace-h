@@ -82,11 +82,12 @@ public:
 
 	enum config_t
 	{
-		PSG_DEFAULT = 0x0,
-		PSG_PIN26_IS_CLKSEL = 0x1,
-		PSG_HAS_INTERNAL_DIVIDER = 0x2,
-		PSG_EXTENDED_ENVELOPE = 0x4,
-		PSG_HAS_EXPANDED_MODE = 0x8
+		PSG_DEFAULT = 0x00,
+		PSG_PIN26_IS_CLKSEL = 0x01,
+		PSG_HAS_INTERNAL_DIVIDER = 0x02,
+		PSG_EXTENDED_ENVELOPE = 0x04,
+		PSG_HAS_EXPANDED_MODE = 0x08
+		PSG_HAS_EXPANDED_MORE = 0x10
 	};
 
 	// construction/destruction
@@ -119,6 +120,9 @@ public:
 			m_env_step_mul = (!(m_feature & PSG_HAS_EXPANDED_MODE)) && (m_type == PSG_TYPE_AY) ? (m_step_mul << 1) : m_step_mul;
 			if (m_feature & PSG_HAS_EXPANDED_MODE)
 				m_env_step_mul <<= 1;
+
+			if (m_feature & PSG_HAS_EXPANDED_MORE)
+				m_env_step_mul <<= 16;
 		}
 	}
 
@@ -308,6 +312,9 @@ public:
 
 	inline bool is_expanded_mode() { return ((m_feature & PSG_HAS_EXPANDED_MODE) && ((m_mode & 0xe) == 0xa)); }
 	inline unsigned char get_register_bank() { return is_expanded_mode() ? (m_mode & 0x1) << 4 : 0; }
+
+	inline bool is_expanded_more() { return ((m_feature & PSG_HAS_EXPANDED_MORE) && ((m_mode & 0xe) == 0xa)); }
+	inline unsigned char get_register_bank() { return is_expanded_more() ? (m_mode & 0x1) << 4 : 0; }
 
 	inline unsigned char noise_and() { return m_regs[AY_NOISEAND] & 0xff; }
 	inline unsigned char noise_or() { return m_regs[AY_NOISEOR] & 0xff; }

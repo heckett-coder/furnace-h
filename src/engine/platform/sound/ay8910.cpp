@@ -901,9 +901,9 @@ float ay8910_device::mix_3D()
 			envelope_t *envelope = &m_envelope[get_envelope_chan(chan)];
 			unsigned int env_volume = envelope->volume;
 			unsigned int env_mask = (1 << (chan + 15));
-			if (m_feature & PSG_HAS_EXPANDED_MODE)
+			if (m_feature & PSG_HAS_EXPANDED_MODE || m_feature & PSG_HAS_EXPANDED_MORE)
 			{
-				if (!is_expanded_mode())
+				if (!is_expanded_mode() || !is_expanded_more())
 				{
 					env_volume >>= 1;
 					env_mask = 0;
@@ -920,7 +920,7 @@ float ay8910_device::mix_3D()
 		}
 		else
 		{
-			const unsigned int tone_mask = is_expanded_mode() ? (1 << (chan + 15)) : 0;
+			const unsigned int tone_mask = (is_expanded_mode() || is_expanded_more()) ? (1 << (chan + 15)) : 0;
 			indx |= tone_mask | (m_vol_enabled[chan] ? tone_volume(tone) << (chan*5) : 0);
 		}
 	}
@@ -947,17 +947,17 @@ void ay8910_device::ay8910_write_reg(int r, int v)
 	{
 		case AY_AFINE:
 		case AY_ACOARSE:
-			coarse = m_regs[AY_ACOARSE] & (is_expanded_mode() ? 0xff : 0xf);
+			coarse = m_regs[AY_ACOARSE] & ((is_expanded_mode() || is_expanded_more()) ? 0xff : 0xf);
 			m_tone[0].set_period(m_regs[AY_AFINE], coarse);
 			break;
 		case AY_BFINE:
 		case AY_BCOARSE:
-			coarse = m_regs[AY_BCOARSE] & (is_expanded_mode() ? 0xff : 0xf);
+			coarse = m_regs[AY_BCOARSE] & ((is_expanded_mode() || is_expanded_more()) ? 0xff : 0xf);
 			m_tone[1].set_period(m_regs[AY_BFINE], coarse);
 			break;
 		case AY_CFINE:
 		case AY_CCOARSE:
-			coarse = m_regs[AY_CCOARSE] & (is_expanded_mode() ? 0xff : 0xf);
+			coarse = m_regs[AY_CCOARSE] & ((is_expanded_mode() || is_expanded_more()) ? 0xff : 0xf);
 			m_tone[2].set_period(m_regs[AY_CFINE], coarse);
 			break;
 		case AY_NOISEPER:
@@ -1059,10 +1059,10 @@ void ay8910_device::sound_stream_update(short* outputs, int advance)
   {
     tone = &m_tone[chan];
     const int period = std::max<int>(1, tone->period) * (m_step_mul << 1);
-    tone->count += advance << (is_expanded_mode() ? 5 : ((m_feature & PSG_HAS_EXPANDED_MODE) ? 0 : 1));
+    tone->count += advance << (is_expanded_mode() || is_expanded_more() ? 5 : ((m_feature & PSG_HAS_EXPANDED_MODE || m_feature & PSG_HAS_EXPANDED_MORE) ? 0 : 1));
     if (tone->count>=period) {
       tone->duty_cycle = (tone->duty_cycle - (tone->count/period)) & 0x1f;
-      tone->output = is_expanded_mode() ? BIT(duty_cycle[tone_duty(tone)], tone->duty_cycle) : BIT(tone->duty_cycle, 0);
+      tone->output = is_expanded_mode() || is_expanded_more() ? BIT(duty_cycle[tone_duty(tone)], tone->duty_cycle) : BIT(tone->duty_cycle, 0);
       tone->count = tone->count % period;
     }
   }
@@ -1075,7 +1075,7 @@ void ay8910_device::sound_stream_update(short* outputs, int advance)
      * channels.
      */
     m_count_noise = 0;
-    m_prescale_noise = (m_prescale_noise + 1) & ((m_feature & PSG_HAS_EXPANDED_MODE) ? 3 : 1);
+    m_prescale_noise = (m_prescale_noise + 1) & ((m_feature & PSG_HAS_EXPANDED_MODE || m_feature & PSG_HAS_EXPANDED_MORE) ? 3 : 1);
 
     if (is_expanded_mode()) // AY8930 noise generator rate is twice? compares as compatibility mode
     {
@@ -1108,7 +1108,7 @@ void ay8910_device::sound_stream_update(short* outputs, int advance)
 
   /* update envelope */
   // who cares about env 1/2 on 8910
-  for (int chan = 0; chan < (is_expanded_mode() ? NUM_CHANNELS : 1); chan++)
+  for (int chan = 0; chan < (is_expanded_mode() || is_expanded_more() ? NUM_CHANNELS : 1); chan++)
   {
     envelope = &m_envelope[chan];
     if (envelope->holding == 0)
@@ -1155,9 +1155,9 @@ void ay8910_device::sound_stream_update(short* outputs, int advance)
       {
         envelope = &m_envelope[get_envelope_chan(chan)];
         unsigned int env_volume = envelope->volume;
-        if (m_feature & PSG_HAS_EXPANDED_MODE)
+        if (m_feature & PSG_HAS_EXPANDED_MODE || m_feature & PSG_HAS_EXPANDED_MORE)
         {
-          if (!is_expanded_mode())
+          if (!is_expanded_mode() && !is_expanded_more())
           {
             env_volume >>= 1;
             if (m_feature & PSG_EXTENDED_ENVELOPE) // AY8914 Has a two bit tone_envelope field
@@ -1183,7 +1183,7 @@ void ay8910_device::sound_stream_update(short* outputs, int advance)
       }
       else
       {
-        if (is_expanded_mode())
+        if (is_expanded_mode() || is_expanded_more())
           outputs[chan]=m_env_table[chan][m_vol_enabled[chan] ? tone_volume(tone) : 0];
         else
           outputs[chan]=m_vol_table[chan][m_vol_enabled[chan] ? tone_volume(tone) : 0];
@@ -1250,7 +1250,7 @@ void ay8910_device::ay8910_reset_ym()
 {
 	m_active = false;
 	m_register_latch = 0;
-	m_rng = (m_feature & PSG_HAS_EXPANDED_MODE) ? 0x1ffff : 1;
+	m_rng = (m_feature & PSG_HAS_EXPANDED_MODE || m_feature & PSG_HAS_EXPANDED_MORE) ? 0x1ffff : 1;
 	m_mode = 0; // ay-3-8910 compatible mode
 	m_noise_value = 0;
 	m_noise_out = 0;
