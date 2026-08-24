@@ -266,7 +266,7 @@ having libintl is recommended for locale support, but if it isn't present, Furna
 type the following on a terminal/console: (make sure Git is installed)
 
 ```
-git clone --recursive https://github.com/tildearrow/furnace.git
+git clone --recursive https://github.com/heckett-coder/furnace-h.git
 cd furnace
 ```
 
