@@ -66,7 +66,8 @@ enum device_type {
   YM3439,
   YMZ284,
   YMZ294,
-  SUNSOFT_5B_SOUND
+  SUNSOFT_5B_SOUND,
+  AY30HD
 };
 
 
@@ -410,5 +411,10 @@ public:
 	sunsoft_5b_sound_device(unsigned int clock);
 };
 
+class ay30hd_device : public ay8910_device
+{
+public:
+	ay30hd_device(unsigned int clock, bool clk_sel = false);
+};
 
 #endif // MAME_DEVICES_SOUND_AY8910_H

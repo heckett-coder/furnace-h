@@ -1484,8 +1484,11 @@ void ay8910_device::set_type(psg_type_t psg_type, bool clk_sel)
 		m_par = &ym2149_param;
 		m_par_env = &ym2149_param_env;
 	}
-	if (m_feature & PSG_HAS_EXPANDED_MODE)
+	if (m_feature & PSG_HAS_EXPANDED_MODE) // AY8930 expanded mode
 		m_env_step_mul <<= 1;
+
+  if (m_feature & PSG_HAS_EXPANDED_MORE) // AY30HD expanded mode, hope it works in the end.
+		m_env_step_mul <<= 16;
 
 	set_clock_sel(clk_sel);
 }
@@ -1558,5 +1561,13 @@ ymz294_device::ymz294_device(unsigned int clock)
 
 sunsoft_5b_sound_device::sunsoft_5b_sound_device(unsigned int clock)
 	: ay8910_device(SUNSOFT_5B_SOUND, clock, PSG_TYPE_YM, 1, 0, PSG_HAS_INTERNAL_DIVIDER)
+{
+}
+
+
+
+
+ay30hd_device::ay30hd_device(unsigned int clock, bool clk_sel)
+	: ay8910_device(AY30HD, clock, PSG_TYPE_YM, 3, 2, PSG_PIN26_IS_CLKSEL | PSG_HAS_EXPANDED_MORE, clk_sel)
 {
 }
