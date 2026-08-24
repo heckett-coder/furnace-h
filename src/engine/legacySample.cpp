@@ -168,6 +168,9 @@ bool DivEngine::convertLegacySampleMode() {
         case DIV_SYSTEM_AY8930:
           // any channel can be DAC'd
           break;
+        case DIV_SYSTEM_AY30HD:
+          // any channel can be DAC'd
+          break;
         case DIV_SYSTEM_YM2610_FULL:
           // Neo Geo CD ADPCM channels
           if (song.dispatchChanOfChan[i]<7) {

@@ -326,6 +326,14 @@ void DivEngine::performVGMWrite(SafeWriter* w, DivSystem sys, DivRegWrite& write
         w->writeC(0x0d|baseAddr2);
         w->writeC(0xa0);
         break;
+      case DIV_SYSTEM_AY30HD:
+        w->writeC(0xa0);
+        w->writeC(0x0d|baseAddr2);
+        w->writeC(0);
+        w->writeC(0xa0);
+        w->writeC(0x0d|baseAddr2);
+        w->writeC(0xa0);
+        break;
       case DIV_SYSTEM_SAA1099:
         w->writeC(0xbd);
         w->writeC(0x1c|baseAddr2);
@@ -1040,6 +1048,11 @@ void DivEngine::performVGMWrite(SafeWriter* w, DivSystem sys, DivRegWrite& write
       w->writeC(baseAddr2|(write.addr&0xff));
       w->writeC(write.val);
       break;
+    case DIV_SYSTEM_AY30HD:
+      w->writeC(0xa0);
+      w->writeC(baseAddr2|(write.addr&0xff));
+      w->writeC(write.val);
+      break;
     case DIV_SYSTEM_SAA1099:
       w->writeC(0xbd);
       w->writeC(baseAddr2|(write.addr&0xff));
@@ -1586,6 +1599,10 @@ SafeWriter* DivEngine::saveVGM(bool* sysToExport, bool loop, int version, bool p
                 break;
               case 3: // AY8914
                 ayConfig=0x04;
+                break;
+              case 4: // AY30HD
+                ayConfig=0x03;
+                hasClockDivider=true;
                 break;
               default: // AY8910
                 ayConfig=0x00;

@@ -412,6 +412,9 @@ void DivDispatchContainer::init(DivSystem sys, DivEngine* eng, int chanCount, do
     case DIV_SYSTEM_AY8930:
       dispatch=new DivPlatformAY8930;
       break;
+    case DIV_SYSTEM_AY30HD:
+      dispatch=new DivPlatformAY8930;
+      break;
     case DIV_SYSTEM_FDS:
       dispatch=new DivPlatformFDS;
       if (isRender) {

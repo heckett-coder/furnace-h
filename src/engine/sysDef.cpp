@@ -287,6 +287,8 @@ const char* DivEngine::getSystemNameJ(DivSystem sys) {
       return "";
     case DIV_SYSTEM_AY8930:
       return "";
+    case DIV_SYSTEM_AY30HD:
+      return "";
     default: // TODO
       return "";
   }
@@ -1105,6 +1107,19 @@ void DivEngine::registerSystems() {
       DivChanDef(_("PSG 1"), "S1", DIV_CH_PULSE, DIV_INS_AY8930, DIV_INS_AMIGA),
       DivChanDef(_("PSG 2"), "S2", DIV_CH_PULSE, DIV_INS_AY8930, DIV_INS_AMIGA),
       DivChanDef(_("PSG 3"), "S3", DIV_CH_PULSE, DIV_INS_AY8930, DIV_INS_AMIGA)
+    }),
+    {},
+    ay8930PostEffectHandlerMap
+  );
+
+  sysDefs[DIV_SYSTEM_AY30HD]=new DivSysDef(
+    _("Microchip AY30HD"), NULL, 0x9b, 0, 3, 3, 3,
+    false, true, 0x151, false, 1U<<DIV_SAMPLE_DEPTH_8BIT, 0, 0,
+    _("an improved version of the AY-3-8910 with a bigger frequency range, duty cycles, configurable noise and per-channel envelopes!"),
+    DivChanDefFunc({
+      DivChanDef(_("PSG 1"), "S1", DIV_CH_PULSE, DIV_INS_AY30HD, DIV_INS_AMIGA),
+      DivChanDef(_("PSG 2"), "S2", DIV_CH_PULSE, DIV_INS_AY30HD, DIV_INS_AMIGA),
+      DivChanDef(_("PSG 3"), "S3", DIV_CH_PULSE, DIV_INS_AY30HD, DIV_INS_AMIGA)
     }),
     {},
     ay8930PostEffectHandlerMap

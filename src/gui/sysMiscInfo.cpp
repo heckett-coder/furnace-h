@@ -113,6 +113,9 @@ const char* FurnaceGUI::getSystemPartNumber(DivSystem sys, DivConfig& flags) {
     case DIV_SYSTEM_AY8930:
       return "AY8930";
       break;
+    case DIV_SYSTEM_AY30HD:
+      return "AY30HD";
+      break;
     case DIV_SYSTEM_VIC20:
       return "VIC";
       break;

@@ -769,6 +769,17 @@ bool DivEngine::loadFTM(unsigned char* file, size_t len, bool dnft, bool dnft_si
             map_ch++;
           }
         }
+        if (expansions & 64) {
+          ds.systemChans[systemID]=3;
+          ds.system[systemID++] = DIV_SYSTEM_AY30HD;
+
+          for (int ch = 0; ch < 3; ch++) {
+            map_channels[curr_chan] = map_ch;
+            ay30hd_chans[ch] = map_ch;
+            curr_chan++;
+            map_ch++;
+          }
+        }
         if (expansions & 128) {
           ds.systemChans[systemID]=6;
           ds.system[systemID++] = DIV_SYSTEM_SAA1099;

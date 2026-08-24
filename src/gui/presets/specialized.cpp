@@ -55,6 +55,11 @@ void initSystemPresetsSpecialized(std::vector<FurnaceGUISysCategory>& sysCategor
     }
   );
   ENTRY(
+    _("Microchip AY30HD"), {
+      CH(DIV_SYSTEM_AY30HD, 1.0f, 0, "")
+    }
+  );
+  ENTRY(
     _("Game Boy"), {
       CH(DIV_SYSTEM_GB, 1.0f, 0, "")
     }
@@ -149,6 +154,11 @@ void initSystemPresetsSpecialized(std::vector<FurnaceGUISysCategory>& sysCategor
   ENTRY(
     _("Watara Supervision"), {
       CH(DIV_SYSTEM_SUPERVISION, 1.0f, 0, "")
+    }
+  );
+  ENTRY(
+    _("Microchip AY8930"), {
+      CH(DIV_SYSTEM_AY30HD, 1.0f, 0, "")
     }
   );
   CATEGORY_END;

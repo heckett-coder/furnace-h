@@ -966,6 +966,12 @@ bool FurnaceGUI::drawSysConf(int chan, int sysPos, DivSystem type, DivConfig& fl
           chipType=3;
           altered=true;
         }
+      if (type==DIV_SYSTEM_AY30HD) {
+        ImGui::Indent();
+        if (ImGui::RadioButton(_("AY-3-30HD"),chipType==4)) {
+          chipType=4;
+          altered=true;
+        }
         popWarningColor();
         ImGui::Unindent();
         if (ImGui::IsItemHovered()) {
