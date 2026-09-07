@@ -972,6 +972,7 @@ bool FurnaceGUI::drawSysConf(int chan, int sysPos, DivSystem type, DivConfig& fl
           chipType=4;
           altered=true;
         }
+      }
         popWarningColor();
         ImGui::Unindent();
         if (ImGui::IsItemHovered()) {

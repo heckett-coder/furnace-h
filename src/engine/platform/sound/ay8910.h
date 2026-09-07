@@ -311,10 +311,9 @@ public:
 	inline unsigned char noise_output() { return is_expanded_mode() ? m_noise_out & 1 : m_rng & 1; }
 
 	inline bool is_expanded_mode() { return ((m_feature & PSG_HAS_EXPANDED_MODE) && ((m_mode & 0xe) == 0xa)); }
-	inline unsigned char get_register_bank() { return is_expanded_mode() ? (m_mode & 0x1) << 4 : 0; }
-
+	
 	inline bool is_expanded_more() { return ((m_feature & PSG_HAS_EXPANDED_MORE) && ((m_mode & 0xe) == 0xa)); }
-	inline unsigned char get_register_bank() { return is_expanded_more() ? (m_mode & 0x1) << 4 : 0; }
+	inline unsigned char get_register_bank() { return (is_expanded_mode() || is_expanded_more()) ? (m_mode & 0x1) << 4 : 0; }
 
 	inline unsigned char noise_and() { return m_regs[AY_NOISEAND] & 0xff; }
 	inline unsigned char noise_or() { return m_regs[AY_NOISEOR] & 0xff; }
