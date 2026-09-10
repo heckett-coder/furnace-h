@@ -872,6 +872,7 @@ bool FurnaceGUI::drawSysConf(int chan, int sysPos, DivSystem type, DivConfig& fl
       break;
     }
     case DIV_SYSTEM_AY8910:
+    case DIV_SYSTEM_AY30HD:
     case DIV_SYSTEM_AY8930: {
       int clockSel=flags.getInt("clockSel",0);
       int chipType=flags.getInt("chipType",0);
@@ -968,7 +969,7 @@ bool FurnaceGUI::drawSysConf(int chan, int sysPos, DivSystem type, DivConfig& fl
         }
       if (type==DIV_SYSTEM_AY30HD) {
         ImGui::Indent();
-        if (ImGui::RadioButton(_("AY-3-30HD"),chipType==4)) {
+        if (ImGui::RadioButton(_("AY-30HD"),chipType==4)) {
           chipType=4;
           altered=true;
         }
