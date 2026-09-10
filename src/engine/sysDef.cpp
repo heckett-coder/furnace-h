@@ -1112,6 +1112,19 @@ void DivEngine::registerSystems() {
     ay8930PostEffectHandlerMap
   );
 
+  sysDefs[DIV_SYSTEM_AY30HD]=new DivSysDef(
+    _("Microchip Clone AY30HD"), NULL, 0xfe, 0, 3, 3, 3,
+    false, true, 0x0, false, 1U<<DIV_SAMPLE_DEPTH_8BIT, 0, 0,
+    _("an improved version of the AY-3-8930 with smoother envelopes, because!"),
+    DivChanDefFunc({
+      DivChanDef(_("PSG 1"), "S1", DIV_CH_PULSE, DIV_INS_AY8930, DIV_INS_AMIGA),
+      DivChanDef(_("PSG 2"), "S2", DIV_CH_PULSE, DIV_INS_AY8930, DIV_INS_AMIGA),
+      DivChanDef(_("PSG 3"), "S3", DIV_CH_PULSE, DIV_INS_AY8930, DIV_INS_AMIGA)
+    }),
+    {},
+    ay8930PostEffectHandlerMap
+  );
+
   sysDefs[DIV_SYSTEM_VIC20]=new DivSysDef(
     _("Commodore VIC-20"), NULL, 0x85, 0, 4, 4, 4,
     false, true, 0, false, 0, 0, 0,
